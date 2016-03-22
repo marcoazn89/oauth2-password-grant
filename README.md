@@ -1,6 +1,6 @@
 Installation
 -------------
-    composer require marcoazn89/oauth2-password-grant:1.0
+    composer require marcoazn89/oauth2-password-grant:^1.0
 
 Generate your keys
 --------------------
