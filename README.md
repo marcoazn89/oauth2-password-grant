@@ -4,8 +4,8 @@ Installation
 
 Generate your keys
 --------------------
-openssl genrsa -out oauth-key.pem 1024
-openssl rsa -in oauth-key.pem -pubout > oauth-key.pub
+    openssl genrsa -out oauth-key.pem 1024
+    openssl rsa -in oauth-key.pem -pubout > oauth-key.pub
 
 OAuth2 configuration
 --------------------
