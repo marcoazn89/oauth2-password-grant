@@ -28,10 +28,9 @@ class OAuth2
     {
         if (empty($username = $request->getParam('username')) || empty($password = $request->getParam('password')) ||
             empty($grant = $request->getParam('grant_type')) || $grant !== 'password') {
-            throw new \Exception\BooBoo(
-                new OAuth2Exception(OAuth2Exception::BAD_CREDENTIALS, [], 'Invalid parameters supplied for authentication'),
-                $response->withStatus(401)
-            );
+            throw (new OAuth2Exception('Invalid parameters supplied for authentication'))
+                ->displayMessage(OAuth2Exception::BAD_CREDENTIALS)
+                ->response($response->withStatus(401));
         }
 
         $result = $this->authRepo->validateCredentials($username, $password);
