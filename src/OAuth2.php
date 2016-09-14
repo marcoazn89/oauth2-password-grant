@@ -85,15 +85,15 @@ class OAuth2
 
     public function validateToken(ServerRequestInterface $request, ResponseInterface $response)
     {
-        $specialHeaders = apache_request_headers();
+        $authHeader = $request->getHeader('HTTP_AUTHORIZATION');
 
-        if (empty($specialHeaders['Authorization'])) {
+        if (empty($authHeader)) {
             throw (new OAuth2Exception('Authorization header is missing'))
                 ->displayMessage(OAuth2Exception::FORBIDDEN)
                 ->response($response->withStatus(403));
         }
 
-        list($token) = sscanf($specialHeaders['Authorization'], 'Bearer %s');
+        list($token) = sscanf($authHeader, 'Bearer %s');
 
         if (!$token) {
             throw (new OAuth2Exception('Token is missing in the request'))
