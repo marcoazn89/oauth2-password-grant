@@ -86,6 +86,7 @@ class OAuth2
     public function validateToken(ServerRequestInterface $request, ResponseInterface $response)
     {
         $authHeader = $request->getHeader('HTTP_AUTHORIZATION');
+        $authHeader = $authHeader[0];
 
         if (empty($authHeader)) {
             throw (new OAuth2Exception('Authorization header is missing'))
