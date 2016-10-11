@@ -10,6 +10,8 @@ use \Lcobucci\JWT\Signer\Key;
 use \Lcobucci\JWT\Signer\Rsa\Sha256;
 use \Lcobucci\JWT\Parser;
 use \Lcobucci\JWT\ValidationData;
+use DateTime;
+use DateInterval;
 
 class OAuth2
 {
@@ -18,6 +20,10 @@ class OAuth2
     protected $config;
     protected $info = [];
 
+    /**
+     * @param AuthRepositoryInterface $authRepo AuthRepo to handle authentication for username and password
+     * @param array                   $config   Must include expiration (ISO_8601 duration), private_key, and public_key
+     */
     public function __construct(AuthRepositoryInterface $authRepo, array $config)
     {
         $this->authRepo = $authRepo;
@@ -43,7 +49,7 @@ class OAuth2
 
         $address = $this->getAddress();
 
-        $expiration = time() + $this->config['expiration'];
+        $expiration = $this->getExpiration($this->config['expiration']);
 
         $builder = (new Builder())
             ->setIssuer($address) // Configures the issuer (iss claim)
@@ -73,8 +79,8 @@ class OAuth2
                 \HTTP\Header\CacheControl::name(),
                 \HTTP\Header\CacheControl::values([
                     \HTTP\Header\CacheControl::NO_CACHE,
-                    \HTTP\Header\CacheControl::REVALIDATE]
-                )
+                    \HTTP\Header\CacheControl::REVALIDATE
+                ])
             )
             ->writeJson([
                 'token'   => sprintf('%s', $token),
@@ -140,5 +146,14 @@ class OAuth2
         $protocol = (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") ? 'http': 'https';
 
         return "{$protocol}://{$_SERVER['HTTP_HOST']}/";
+    }
+
+    protected function getExpiration($format)
+    {
+        $date = new DateTime;
+
+        $date->add(new DateInterval($format));
+
+        return $date->getTimestamp();
     }
 }
