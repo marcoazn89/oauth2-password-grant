@@ -82,11 +82,11 @@ class OAuth2
                     \HTTP\Header\CacheControl::REVALIDATE
                 ])
             )
-            ->writeJson([
+            ->write(json_encode([
                 'token'   => sprintf('%s', $token),
                 'type'    => 'Bearer',
                 'expires' => $expiration
-            ]);
+            ]));
     }
 
     public function validateToken(ServerRequestInterface $request, ResponseInterface $response)
