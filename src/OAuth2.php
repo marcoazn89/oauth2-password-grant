@@ -82,6 +82,7 @@ class OAuth2
                     \HTTP\Header\CacheControl::REVALIDATE
                 ])
             )
+            ->withType('application/json;charset=utf-8')
             ->write(json_encode([
                 'token'   => sprintf('%s', $token),
                 'type'    => 'Bearer',
