@@ -95,15 +95,15 @@ class OAuth2
         $authHeader = $request->getHeader('HTTP_AUTHORIZATION');
 
         if (empty($authHeader)) {
-            $authHeader = apache_request_headers();
+            $authHeader = $this->getHeaders();
 
-            if (empty($authHeader['Authorization'])) {
+            if (empty($authHeader['authorization'])) {
                 throw (new OAuth2Exception('Authorization header is missing'))
                     ->displayMessage(OAuth2Exception::FORBIDDEN)
                     ->response($response->withStatus(403));
             }
 
-            $authHeader = $authHeader['Authorization'];
+            $authHeader = $authHeader['authorization'];
         } else {
             $authHeader = $authHeader[0];
         }
@@ -164,5 +164,17 @@ class OAuth2
         $date->add(new DateInterval($format));
 
         return $date->getTimestamp();
+    }
+
+    protected function getHeaders()
+    {
+        $headers = [];
+
+        foreach (apache_request_headers() as $k => $v) {
+            $header = strtolower($k);
+            $headers[$header] = $v;
+        }
+
+        return $headers;
     }
 }
