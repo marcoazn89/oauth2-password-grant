@@ -95,7 +95,7 @@ class OAuth2
         $authHeader = $request->getHeader('HTTP_AUTHORIZATION');
 
         if (empty($authHeader)) {
-            $authHeader = getHeaders();
+            $authHeader = $this->getHeaders();
 
             if (empty($authHeader['authorization'])) {
                 throw (new OAuth2Exception('Authorization header is missing'))
@@ -170,7 +170,7 @@ class OAuth2
     {
         $headers = [];
 
-        foreach ($this->getHeaders() as $k => $v) {
+        foreach (apache_request_headers() as $k => $v) {
             $header = strtolower($k);
             $headers[$header] = $v;
         }
